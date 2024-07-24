@@ -12,28 +12,28 @@ pipeline {
             sh(script: 'docker compose build')
          }
       }
-
-      stage ( 'Start App') {
-         steps{
-            sh (script: 'docker compose up -d')
+      stage('Start App') {
+         steps {
+            sh(script: 'docker compose up -d')
          }
       }
-      stage ('Run Tests') {
+      stage('Run Tests') {
          steps {
-            sh (script:'pytest "/tests/test_sample.py')
+            sh(script: 'pytest ./tests/test_sample.py')
          }
-      post {
-         success
-            echo "Tests passed! :)"
+         post {
+            success {
+               echo "Tests passed! :)"
             }
-         failure {
-            echo "Tests failed :("
+            failure {
+               echo "Tests failed :("
+            }
          }
+      }
+   }
+   post {
+      always {
+         sh(script: 'docker compose down')
       }
    }
 }
-post {
-   always {
-      sh(script: 'docker compose down')
-      }
-   }
